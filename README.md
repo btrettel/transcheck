@@ -54,8 +54,10 @@ The `\transfiglabel{}` macro replaces the `\label{}` macro used in figures. The 
 
 These figures can be referenced with the label `fig:X` where X is the figure number.
 
-The `\transfigimage{#1}{#2}{#3}{#4}` macro can be used to conveniently load figures if the filename of the figure is #1.#3, where #1 is the figure number. #4 defines the image width. To be more clear, this macro is simply the following:
+The `\transfigimage{#1}{#2}{#3}{#4}` macro can be used to conveniently load figures if the filename of the figure is #1.#3, where #1 is the figure number and #3 is the filename extension. #2 is the figure caption. #4 defines the image width. To be more clear, this macro is simply the following:
 
-   \newcommand*{\transfigimage}[4]{\includegraphics[width=#4]{#1.#3}%
-      \caption{#2}%
-      \transfiglabel{#1}}
+```
+\newcommand*{\transfigimage}[4]{\includegraphics[width=#4]{#1.#3}%
+   \caption{#2}%
+   \transfiglabel{#1}}
+```
