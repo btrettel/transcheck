@@ -1,6 +1,24 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{transcheck}[2021-04-17 Initial version]
 
+\RequirePackage{marginnote}
+\RequirePackage[normalem]{ulem}
+\RequirePackage{refcount}
+
+% For type checking.
+% https://texfaq.org/FAQ-isitanum
+\def\IsPositivetranscheck#1{%
+  TT\fi%
+  \ifcat_\ifnum0<0#1 _\else A\fi%
+}
+\newcommand*{\RequirePosInttranscheck}[1]{%
+   \if\IsPositivetranscheck{#1}%
+      \typeout{Is positive integer: #1}%
+   \else%
+      \PackageError{transcheck}{Positive integer expected: #1}{}%
+   \fi%
+}
+
 % Doing this rather than RequirePackage allows the user to select the languages more naturally and also does not require the babel package if it is not needed.
 \AtBeginDocument{%
 \@ifpackageloaded{babel}%
@@ -23,7 +41,7 @@
 \newcommand*{\transcheck}[1]{\uline{#1}\marginnote{Check}\PackageWarning{transcheck}{Check the translation of this line.}}
 
 \newcommand*{\origpagestart}[2][0]{%
-   \RequirePosInt{#2}%
+   \RequirePosInttranscheck{#2}%
    \ifnum#1=0%
       \def\originalcolumn{}%
    \fi%
@@ -48,7 +66,7 @@
    \typeout{Original page: p.~\theoriginalpage\originalcolumn}%
 }%
 \newcommand*{\origpage}[2][0]{%
-   \RequirePosInt{#2}%
+   \RequirePosInttranscheck{#2}%
    \ifnum#1=0%
       \stepcounter{originalpage}%
       \def\originalcolumn{}%
@@ -92,15 +110,14 @@
 \makeatother
 
 % TODO: Post on tex.stackexchange.com to see if there's a way to make this work with custom tagged equations too.
-\usepackage{refcount}
-\newcommand*{\transeqnlabel}[1]{%
+\newcommand*{\transeqlabel}[1]{%
    % \ref can't be expanded? https://tex.stackexchange.com/a/209195
-   \label{eqn:#1}%
-   \ifnum\getrefnumber{eqn:#1}=#1%
-      \typeout{Equation number matches original: equation #1 vs. \getrefnumber{eqn:#1}}%
+   \label{eq:#1}%
+   \ifnum\getrefnumber{eq:#1}=#1%
+      \typeout{Equation number matches original: equation #1 vs. \getrefnumber{eq:#1}}%
    \else%
       % This needs to be a warning or else the document wouldn't compile the first time?
-      \PackageWarning{transcheck}{Equation number of translation not as expected. Expected: #1. Observed: \getrefnumber{eqn:#1}.}%
+      \PackageWarning{transcheck}{Equation number of translation not as expected. Expected: #1. Observed: \getrefnumber{eq:#1}.}%
    \fi%
    %
    % TODO: Return an error if in equation* or align* environment.
@@ -130,7 +147,7 @@
 
 % TODO: Add a check to make sure that the footnote numbers are consistent?
 
-\newcommand*{\MissingEqn}[1]{\Transfootnote{There is no equation (#1) in the original.}\stepcounter{equation}}
+\newcommand*{\MissingEq}[1]{\Transfootnote{There is no equation (#1) in the original.}\stepcounter{equation}}
 
 % Using this function will ensure that the figure number matches that of the figure image file.
 \newcommand*{\transfigimage}[4]{\includegraphics[width=#4]{#1.#3}%
