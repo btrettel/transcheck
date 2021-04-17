@@ -1,0 +1,138 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{transcheck}[2021-04-17 Initial version]
+
+% Doing this rather than RequirePackage allows the user to select the languages more naturally and also does not require the babel package if it is not needed.
+\AtBeginDocument{%
+\@ifpackageloaded{babel}%
+   {%
+   \newcommand*{\conversion}[3]{\textit{\foreignlanguage{#1}{#2}} = \textit{#3}}
+   }%
+   {%
+      \PackageWarning{transcheck}{You have not loaded the 'babel' package, which is required for the conversion macro.}%
+   }%
+}
+
+% TODO: Macro to assert that equation has no tag/number.
+
+\newcommand*{\Transnote}{Translator's note:\ }
+\newcommand*{\Editornote}{Editor's note:\ }
+\newcommand{\Transfootnote}[1]{\texorpdfstring{\footnote{\Transnote #1}}{}}
+\newcommand{\Transfootnotetext}[1]{\footnotetext{\Transnote #1}}
+\newcommand*{\Editorfootnote}[1]{\texorpdfstring{\footnote{\Editornote #1}}{}}
+\newcommand*{\Editorfootnotetext}[1]{\footnotetext{\Editornote #1}}
+\newcommand*{\transcheck}[1]{\uline{#1}\marginnote{Check}\PackageWarning{transcheck}{Check the translation of this line.}}
+
+\newcommand*{\origpagestart}[2][0]{%
+   \RequirePosInt{#2}%
+   \ifnum#1=0%
+      \def\originalcolumn{}%
+   \fi%
+   \ifnum#1=1%
+      \def\originalcolumn{L}%
+   \fi%
+   \ifnum#1=2%
+      \def\originalcolumn{CL}%
+   \fi%
+   \ifnum#1=3%
+      \def\originalcolumn{C}%
+   \fi%
+   \ifnum#1=4%
+      \def\originalcolumn{CR}%
+   \fi%
+   \ifnum#1=5%
+      \def\originalcolumn{R}%
+   \fi%
+   \newcounter{originalpage}%
+   \setcounter{originalpage}{#2}%
+   \marginnote{\normalsize\textnormal{p.~\theoriginalpage\originalcolumn}}%
+   \typeout{Original page: p.~\theoriginalpage\originalcolumn}%
+}%
+\newcommand*{\origpage}[2][0]{%
+   \RequirePosInt{#2}%
+   \ifnum#1=0%
+      \stepcounter{originalpage}%
+      \def\originalcolumn{}%
+   \fi%
+   \ifnum#1=1%
+      \stepcounter{originalpage}%
+      \def\originalcolumn{L}%
+   \fi%
+   \ifnum#1=2%
+      \def\originalcolumn{CL}%
+   \fi%
+   \ifnum#1=3%
+      \def\originalcolumn{C}%
+   \fi%
+   \ifnum#1=4%
+      \def\originalcolumn{CR}%
+   \fi%
+   \ifnum#1=5%
+      \def\originalcolumn{R}%
+   \fi%
+   \ifnum\value{originalpage}=#2%
+      \marginnote{\normalsize\textnormal{p.~\theoriginalpage\originalcolumn}}%
+      \typeout{Original page: p.~\theoriginalpage\originalcolumn}%
+   \else%
+      \PackageError{transcheck}{Page of translation not as expected. Expected: #2. Observed: \theoriginalpage.}{}%
+   \fi%
+}%
+
+% https://tex.stackexchange.com/a/18659
+\makeatletter \def\IfEnvir #1%
+% implicit #2 "what if true"
+% implicit #3 "what if false"
+{%
+  \ifnum \strcmp{\@currenvir}{#1}=0
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+
+\makeatother
+
+% TODO: Post on tex.stackexchange.com to see if there's a way to make this work with custom tagged equations too.
+\usepackage{refcount}
+\newcommand*{\transeqnlabel}[1]{%
+   % \ref can't be expanded? https://tex.stackexchange.com/a/209195
+   \label{eqn:#1}%
+   \ifnum\getrefnumber{eqn:#1}=#1%
+      \typeout{Equation number matches original: equation #1 vs. \getrefnumber{eqn:#1}}%
+   \else%
+      % This needs to be a warning or else the document wouldn't compile the first time?
+      \PackageWarning{transcheck}{Equation number of translation not as expected. Expected: #1. Observed: \getrefnumber{eqn:#1}.}%
+   \fi%
+   %
+   % TODO: Return an error if in equation* or align* environment.
+   % https://tex.stackexchange.com/q/18652
+   % The current setup will return a warning because an unnumbered equation does not have the expected number, though.
+}
+\newcommand*{\transseclabel}[1]{%
+   % \ref can't be expanded? https://tex.stackexchange.com/a/209195
+   \label{sec:#1}%
+   \ifnum\getrefnumber{sec:#1}=#1%
+      \typeout{Section number matches original: section #1 vs. \getrefnumber{sec:#1}}%
+   \else%
+      % This needs to be a warning or else the document wouldn't compile the first time?
+      \PackageWarning{transcheck}{Section number of translation not as expected. Expected: #1. Observed: \getrefnumber{sec:#1}.}%
+   \fi%
+}
+\newcommand*{\transfiglabel}[1]{%
+   % \ref can't be expanded? https://tex.stackexchange.com/a/209195
+   \label{fig:#1}%
+   \ifnum\getrefnumber{fig:#1}=#1%
+      \typeout{Figure number matches original: figure #1 vs. \getrefnumber{figure:#1}}%
+   \else%
+      % This needs to be a warning or else the document wouldn't compile the first time?
+      \PackageWarning{transcheck}{Figure number of translation not as expected. Expected: #1. Observed: \getrefnumber{fig:#1}.}%
+   \fi%
+}
+
+% TODO: Add a check to make sure that the footnote numbers are consistent?
+
+\newcommand*{\MissingEqn}[1]{\Transfootnote{There is no equation (#1) in the original.}\stepcounter{equation}}
+
+% Using this function will ensure that the figure number matches that of the figure image file.
+\newcommand*{\transfigimage}[4]{\includegraphics[width=#4]{#1.#3}%
+   \caption{#2}%
+   \transfiglabel{#1}}
