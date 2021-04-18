@@ -12,7 +12,7 @@ This package uses the marginnote, ulem, and refcount packages. There is an addit
 - `\Transnote{}` can be used to add marked text from the translator with the phrase "Translator's note:" preceding the text.
 - `\Transfootnote{}` creates a footnote starting with "Translator's note:".
 - `\Transfootnotetext{}` creates a footnote without the associated footnote mark like `\footnotetext{}` does.
-- `\conversion{}` uses the babel package to write *text in original language* = *text in language of translation*. This is useful to note what phrases mean in figures where it is inconvenient to edit the text in the image. E.g., `\conversion{german}{dimensionslose Zeit}{dimensionless time}` returns "*dimensionslose Zeit* = *dimensionless time*".
+- `\conversion{}{}` uses the babel package to write *text in original language* = *text in language of translation*. This is useful to note what phrases mean in figures where it is inconvenient to edit the text in the image. E.g., `\conversion{german}{dimensionslose Zeit}{dimensionless time}` returns "*dimensionslose Zeit* = *dimensionless time*".
 
 ## Marking and checking page numbers
 
@@ -30,7 +30,7 @@ When the page changes, put the `\origpage{}` macro after the first word of the n
 
 The `\origpage{}` macro will check that the reported page number matches that of the counter the transcheck package is keeping, and return an error if the pages do not match.
 
-For original documents which used multiple columns, an optional first parameter can be used in `\origpagestart{}{}` and `\origpage{}{}`. to mark the column, however, this parameter is not checked at present. This parameter is zero by default (corresponding to no columns). 1 is the left column (represented by L in the margin note, e.g., p. 12L means page 2, left column). 2 is the center-left column (represented by CL in the margin note). 3 is the center column (represented by C in the margin note). 4 is the center-right column (represented by CR in the margin note). 5 is the right column (represented by R in the margin note). E.g.: `\origpage{1}{12}` corresponds to the left column of page 12.
+For original documents which used multiple columns, an optional first parameter can be used in `\origpagestart[]{}` and `\origpage[]{}`. to mark the column, however, this parameter is not checked at present. This parameter is zero by default (corresponding to no columns). 1 is the left column (represented by L in the margin note, e.g., p. 12L means page 2, left column). 2 is the center-left column (represented by CL in the margin note). 3 is the center column (represented by C in the margin note). 4 is the center-right column (represented by CR in the margin note). 5 is the right column (represented by R in the margin note). E.g.: `\origpage[1]{12}` corresponds to the left column of page 12.
 
 ## Checking equation numbers
 
