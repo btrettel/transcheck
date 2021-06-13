@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{transcheck}[2021-04-17 Initial version]
+\ProvidesPackage{transcheck}[2021/06/13 Macros to help with writing translations]
 
 \RequirePackage{marginnote}
 \RequirePackage[normalem]{ulem}
@@ -36,8 +36,8 @@
 \newcommand*{\Editornote}{Editor's note:\ }
 \newcommand{\Transfootnote}[1]{\texorpdfstring{\footnote{\Transnote #1}}{}}
 \newcommand{\Transfootnotetext}[1]{\footnotetext{\Transnote #1}}
-\newcommand*{\Editorfootnote}[1]{\texorpdfstring{\footnote{\Editornote #1}}{}}
-\newcommand*{\Editorfootnotetext}[1]{\footnotetext{\Editornote #1}}
+\newcommand{\Editorfootnote}[1]{\texorpdfstring{\footnote{\Editornote #1}}{}}
+\newcommand{\Editorfootnotetext}[1]{\footnotetext{\Editornote #1}}
 \newcommand*{\transcheck}[1]{\uline{#1}\marginnote{Check}\PackageWarning{transcheck}{Check the translation of this line.}}
 
 \newcommand*{\origpagestart}[2][0]{%
@@ -138,7 +138,7 @@
    % \ref can't be expanded? https://tex.stackexchange.com/a/209195
    \label{fig:#1}%
    \ifnum\getrefnumber{fig:#1}=#1%
-      \typeout{Figure number matches original: figure #1 vs. \getrefnumber{figure:#1}}%
+      \typeout{Figure number matches original: figure #1 vs. \getrefnumber{fig:#1}}%
    \else%
       % This needs to be a warning or else the document wouldn't compile the first time?
       \PackageWarning{transcheck}{Figure number of translation not as expected. Expected: #1. Observed: \getrefnumber{fig:#1}.}%
@@ -148,6 +148,7 @@
 % TODO: Add a check to make sure that the footnote numbers are consistent?
 
 \newcommand*{\MissingEq}[1]{\Transfootnote{There is no equation (#1) in the original.}\stepcounter{equation}}
+\newcommand*{\MissingFig}[1]{\Transfootnote{There is no figure (#1) in the original.}\stepcounter{figure}}
 
 % Using this function will ensure that the figure number matches that of the figure image file.
 \newcommand*{\transfigimage}[4]{\includegraphics[width=#4]{#1.#3}%

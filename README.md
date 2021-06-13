@@ -4,7 +4,7 @@ The purpose of this LaTeX package is to add additional checks to LaTeX files for
 
 I was motivated to make this package after noticing missing parts of translations I have produced and missing parts of even professionally produced translations.
 
-This package uses the marginnote, ulem, and refcount packages. There is an additional optional macro, `\conversion{}`, which is only available if the babel package was previously called.
+This package uses the marginnote, ulem, and refcount packages. There is an additional optional macro, `\conversion{}{}`, which is only available if the babel package was previously called.
 
 ## Useful macros
 
@@ -38,7 +38,7 @@ The `\transeqlabel{}` macro replaces the `\label{}` macro used in math environme
 
 These equations can be referenced with the label `eq:X` where X is the equation number.
 
-For equations which do not have integer numbers, the `\transeqlabel{}` macro can be omitted. The checking is only done the `\transeqlabel{}` macro is present.
+For equations which do not have integer numbers, the `\transeqlabel{}` macro can be omitted. The checking is only done if the `\transeqlabel{}` macro is present.
 
 If an equation is missing from the original, you can use the `\MissingEq{}` macro to note that. That is, putting `\MissingEq{12}` in the LaTeX file after (preferably) equation 11 will increment the counter. For the moment this macro does not provide any checking so the parameter can be empty.
 
@@ -61,3 +61,7 @@ The `\transfigimage{#1}{#2}{#3}{#4}` macro can be used to conveniently load figu
    \caption{#2}%
    \transfiglabel{#1}}
 ```
+
+## Future plans
+
+- Change optional column parameter of `\origpagestart` and `\origpage` to accept L, CL, C, CR, and R as column parameters instead of numbers. Check that the order of the columns is correct within the same page. (Would be easiest to do with LuaTeX.)
