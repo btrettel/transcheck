@@ -147,8 +147,8 @@
 
 % TODO: Add a check to make sure that the footnote numbers are consistent?
 
-\newcommand*{\MissingEq}[1]{\Transfootnote{There is no equation (#1) in the original.}\stepcounter{equation}}
-\newcommand*{\MissingFig}[1]{\Transfootnote{There is no figure (#1) in the original.}\stepcounter{figure}}
+\newcommand*{\MissingEq}[1]{\Transfootnote{There is no equation #1 in the original.}\stepcounter{equation}}
+\newcommand*{\MissingFig}[1]{\Transfootnote{There is no figure #1 in the original.}\stepcounter{figure}}
 
 % Using this function will ensure that the figure number matches that of the figure image file.
 \newcommand*{\transfigimage}[4]{\includegraphics[width=#4]{#1.#3}%
